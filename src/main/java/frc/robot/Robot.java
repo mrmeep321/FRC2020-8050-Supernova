@@ -10,11 +10,15 @@ package frc.robot;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorSensorV3;
 
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Drivetrain;
@@ -31,9 +35,18 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
   private SpeedController dtMotorLeftA;
   private SpeedController dtMotorRightA;
+  private ColorSensorV3 color;
+  private I2C.Port colorPort;
   private Drivetrain dt;
   private Joystick jA;
   private Joystick jB;
+
+  private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
+  private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
+  private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
+  private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
+
+  private final ColorMatch match = new ColorMatch();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -49,6 +62,14 @@ public class Robot extends TimedRobot {
     dtMotorLeftA = new PWMVictorSPX(3);
     dtMotorRightA = new PWMVictorSPX(2);
     dt = new Drivetrain(jA, new Object[]{"Left", dtMotorLeftA}, new Object[]{"Right", dtMotorRightA});
+  
+    colorPort = I2C.Port.kOnboard;
+    color = new ColorSensorV3(colorPort);
+
+    match.addColorMatch(kBlueTarget);
+    match.addColorMatch(kGreenTarget);
+    match.addColorMatch(kRedTarget);
+    match.addColorMatch(kYellowTarget); 
   }
 
   /**
@@ -116,7 +137,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    
+    /*if(match.matchClosestColor(color.getColor()).color == kRedTarget)
+    dtMotorLeftA.set(0.5); else dtMotorLeftA.set(0);*/
   }
 
   @Override
