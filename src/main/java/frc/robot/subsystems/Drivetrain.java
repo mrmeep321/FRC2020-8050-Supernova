@@ -42,12 +42,15 @@ public class Drivetrain extends EnhancedSubsystem {
 
     @Override
     public void loop() {
+        double g;
+
         for(SpeedController i : lMot) {
-            i.set(controller.getY()/2+controller.getX()/2);
-        }
+            i.set(-controller.getY()+controller.getX());
+         }
 
         for(SpeedController i : rMot) {
-            i.set(-controller.getY()/2-controller.getX()/2);
+            
+            i.set(controller.getY()-controller.getX());
         }
     }
 
