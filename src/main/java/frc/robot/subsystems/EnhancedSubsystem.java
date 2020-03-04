@@ -34,7 +34,9 @@ public abstract class EnhancedSubsystem extends SubsystemBase {
 
     public void end() {
         isActive = false;
-        if(interruptable) {loopThread.interrupt(); postEnd();};
+        if(interruptable) loopThread.interrupt();
+        while(loopThread.isAlive());
+        postEnd();
     }
 
     public static void endAll() {
