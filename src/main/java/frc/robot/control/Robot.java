@@ -7,24 +7,21 @@
 
 package frc.robot.control;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import com.revrobotics.ColorMatch;
-import com.revrobotics.ColorSensorV3;
 
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PWMTalonFX;
-import edu.wpi.first.wpilibj.PWMVictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.misc.MechanicsJoystick;
+import frc.robot.subsystems.EnhancedSubsystemCollection;
 import frc.robot.subsystems.drivetrain.DriveMotor;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.drivetrain.DriveMotor.MotorDirection;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterBelt;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -39,10 +36,14 @@ public class Robot extends TimedRobot {
   private SpeedController dtMotorLeftA;
   private SpeedController dtMotorRightA;
   //private ColorSensorV3 color;
-  private I2C.Port colorPort;
+  //private I2C.Port colorPort;
   private Drivetrain dt;
+  private Shooter shooter;
+  private ShooterBelt shooterBelt;
+  private EnhancedSubsystemCollection shooters;
+
   private Joystick jA;
-  private Joystick jB;
+  private MechanicsJoystick jB;
 
   /*private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
   private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
@@ -60,14 +61,20 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
     jA = new Joystick(0);
-    jB = new Joystick(1);
+    jB = new MechanicsJoystick(1);
+
     dtMotorLeftA = new PWMTalonFX(0);
     SpeedController dtMotorLeftB = new PWMTalonFX(0);
     dtMotorRightA = new PWMTalonFX(1);
     SpeedController dtMotorRightB = new PWMTalonFX(1);
+
     dt = new Drivetrain(jA, new DriveMotor(dtMotorLeftA, MotorDirection.LEFT), new DriveMotor(dtMotorLeftB, MotorDirection.LEFT), new DriveMotor(dtMotorRightA, MotorDirection.RIGHT), new DriveMotor(dtMotorRightB, MotorDirection.RIGHT));
-  
+    shooter = new Shooter(new TalonSRX(1), new TalonSRX(2), jB);
+    shooterBelt = new ShooterBelt(new TalonSRX(3), jB);
+
+
     //colorPort = I2C.Port.kOnboard;
     //color = new ColorSensorV3(colorPort);
 
@@ -76,8 +83,7 @@ public class Robot extends TimedRobot {
     match.addColorMatch(kRedTarget);
     match.addColorMatch(kYellowTarget); */
     
-    VictorSPX g = new VictorSPX(1);
-    g.set(ControlMode.Position, 5);
+    shooters = new EnhancedSubsystemCollection(shooter, shooterBelt);
   }
 
   /**
@@ -138,6 +144,7 @@ public class Robot extends TimedRobot {
     }
 
     dt.start();
+    shooters.start();
   }
 
   /**

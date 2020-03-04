@@ -17,4 +17,10 @@ public class EnhancedSubsystemCollection {
             i.start();
         }
     }
+
+    public void end() {
+        for(EnhancedSubsystem i : systems) {
+            i.end();
+        }
+    }
 }
