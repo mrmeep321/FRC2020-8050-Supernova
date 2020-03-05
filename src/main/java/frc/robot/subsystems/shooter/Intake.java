@@ -13,6 +13,8 @@ public class Intake extends EnhancedSubsystem {
 
     //test
 
+    private String s;
+
     public Intake(TalonSRX leftTilt, TalonSRX rightTilt, MechanicsJoystick controller) {
         super(true);
 
