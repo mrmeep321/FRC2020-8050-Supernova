@@ -16,10 +16,12 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.misc.MechanicsJoystick;
+import frc.robot.misc.QuickMod;
 import frc.robot.subsystems.EnhancedSubsystemCollection;
 import frc.robot.subsystems.drivetrain.DriveMotor;
 import frc.robot.subsystems.drivetrain.Drivetrain;
 import frc.robot.subsystems.drivetrain.DriveMotor.MotorDirection;
+import frc.robot.subsystems.shooter.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterBelt;
 
@@ -33,10 +35,13 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-  private SpeedController dtMotorLeftA;
-  private SpeedController dtMotorRightA;
+
+  private SpeedController dtMotorLeftA, dtMotorRightA, dtMotorLeftB, dtMotorRightB;
+  private TalonSRX mTiltFront, mTiltBack, mBelt, mShooterLeft, mShooterRight;
+
   //private ColorSensorV3 color;
   //private I2C.Port colorPort;
+
   private Drivetrain dt;
   private Shooter shooter;
   private ShooterBelt shooterBelt;
@@ -44,6 +49,8 @@ public class Robot extends TimedRobot {
 
   private Joystick jA;
   private MechanicsJoystick jB;
+
+  private Intake intake;
 
   /*private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
   private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
@@ -66,14 +73,19 @@ public class Robot extends TimedRobot {
     jB = new MechanicsJoystick(1);
 
     dtMotorLeftA = new PWMTalonFX(0);
-    SpeedController dtMotorLeftB = new PWMTalonFX(0);
+    dtMotorLeftB = new PWMTalonFX(0);
     dtMotorRightA = new PWMTalonFX(1);
-    SpeedController dtMotorRightB = new PWMTalonFX(1);
+    dtMotorRightB = new PWMTalonFX(1);
+
+    mTiltFront = new TalonSRX(QuickMod.frontTilt);
+    mTiltBack = new TalonSRX(QuickMod.backTilt);
+    mShooterLeft = new TalonSRX(QuickMod.leftTubeWheel);
+    mShooterRight = new TalonSRX(QuickMod.rightTubeWheel);
+    mBelt = new TalonSRX(QuickMod.belt);
 
     dt = new Drivetrain(jA, new DriveMotor(dtMotorLeftA, MotorDirection.LEFT), new DriveMotor(dtMotorLeftB, MotorDirection.LEFT), new DriveMotor(dtMotorRightA, MotorDirection.RIGHT), new DriveMotor(dtMotorRightB, MotorDirection.RIGHT));
-    shooter = new Shooter(new TalonSRX(1), new TalonSRX(2), jB);
-    shooterBelt = new ShooterBelt(new TalonSRX(3), jB);
-
+    shooter = new Shooter(mTiltFront, mTiltBack, mShooterLeft, mShooterRight, mBelt, jB);
+    //intake = new Intake();
 
     //colorPort = I2C.Port.kOnboard;
     //color = new ColorSensorV3(colorPort);
@@ -145,6 +157,7 @@ public class Robot extends TimedRobot {
 
     dt.start();
     shooters.start();
+    intake.start();
   }
 
   /**

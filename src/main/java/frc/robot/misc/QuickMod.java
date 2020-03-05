@@ -26,4 +26,19 @@ public class QuickMod {
 
     //Set this line equal to either MANUAL or AUTOMATIC (Don't forget caps) to change the default mode of the mechanics flightstick.
     public static final JoystickMode mechanicsJoystickMode = MANUAL;
+
+    //CAN IDs for all CAN motors on the robot
+    //Open up phoenix config while connected to robot to change CAN IDs
+    public static final int intake = 7;
+    public static final int leftTubeWheel = 3;
+    public static final int rightTubeWheel = 2;
+    public static final int frontTilt = 10;
+    public static final int climberSetup = 8;
+    public static final int climberPull = 0;
+    public static final int belt = 1;
+    public static final int backTilt = 11;
+
+    //PWM ports for all PWM motors on the robot
+    public static final int leftMotors = 0;
+    public static final int rightMotors = 1;
 }
