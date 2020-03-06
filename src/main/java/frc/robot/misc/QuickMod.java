@@ -29,14 +29,14 @@ public class QuickMod {
 
     //CAN IDs for all CAN motors on the robot
     //Open up phoenix config while connected to robot to change CAN IDs
-    public static final int intake = 7;
-    public static final int leftTubeWheel = 3;
-    public static final int rightTubeWheel = 2;
-    public static final int frontTilt = 10;
-    public static final int climberSetup = 8;
-    public static final int climberPull = 0;
-    public static final int belt = 1;
-    public static final int backTilt = 11;
+    public static final int intake = 2;
+    public static final int leftTubeWheel = 4;
+    public static final int rightTubeWheel = 3;
+    public static final int frontTilt = 1;
+    public static final int climberSetup = 1;
+    public static final int climberPull = 2;
+    public static final int belt = 3;
+    public static final int backTilt = 5;
 
     //PWM ports for all PWM motors on the robot
     public static final int leftMotors = 0;

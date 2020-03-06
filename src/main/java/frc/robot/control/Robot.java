@@ -42,10 +42,12 @@ public class Robot extends TimedRobot {
   private SpeedController dtMotorLeftA, dtMotorRightA, dtMotorLeftB, dtMotorRightB;
   private TalonSRX mTiltFront, mTiltBack, mBelt, mShooterLeft, mShooterRight;
 
+  private DrivetrainDefaultCommand driveCommand;
+
   //private ColorSensorV3 color;b
   //private I2C.Port colorPort;
 
-  private Drivetrain dt;
+  public static Drivetrain dt;
   private Shooter shooter;
   private ShooterBelt shooterBelt;
   private EnhancedSubsystemCollection shooters;
@@ -62,10 +64,15 @@ public class Robot extends TimedRobot {
 
   private final ColorMatch match = new ColorMatch();*/
 
+  public static Drivetrain getDrivetrain() {
+    return dt;
+  }
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
+
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
@@ -94,6 +101,10 @@ public class Robot extends TimedRobot {
     match.addColorMatch(kYellowTarget); */
     
     shooters = new EnhancedSubsystemCollection(shooter, shooterBelt);
+
+    driveCommand = new DrivetrainDefaultCommand(dt);
+
+    dt.setDefaultCommand(driveCommand);
   }
 
   /**
@@ -155,6 +166,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    //new DrivetrainDefaultCommand(dt).schedule();
   }
 
   /**

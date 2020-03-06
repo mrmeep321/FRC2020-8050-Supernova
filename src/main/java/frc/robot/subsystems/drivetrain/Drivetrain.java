@@ -24,9 +24,10 @@ public class Drivetrain extends SubsystemBase {
      *
      */
     public Drivetrain() {
-        this.setDefaultCommand(new DrivetrainDefaultCommand(this));
-
         Vector<DriveMotor> motConf = new Vector<>();
+
+        lMot = new Vector<>();
+        rMot = new Vector<>();
 
         motConf.add(new DriveMotor(new PWMTalonFX(0), DriveMotor.MotorDirection.LEFT));
         motConf.add(new DriveMotor(new PWMTalonFX(9), DriveMotor.MotorDirection.RIGHT));
@@ -53,7 +54,7 @@ public class Drivetrain extends SubsystemBase {
         double mod = QuickMod.speedMod;
         double g;
 
-        g = speed;
+        g = speed/QuickMod.speedMod;
 
         for(SpeedController i : lMot) {
             i.set(((g > 1) ? 1 : (g < -1) ? -1 : g)/mod);
@@ -82,7 +83,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void loopTick() {
-        drive(-controller.getRawAxis(QuickMod.drivetrainController[0])+controller.getRawAxis(QuickMod.drivetrainController[1]), controller.getRawAxis(QuickMod.drivetrainController[0])-controller.getRawAxis(QuickMod.drivetrainController[1]));
+        drive(-controller.getRawAxis(QuickMod.drivetrainController[0])+controller.getRawAxis(QuickMod.drivetrainController[1]), (controller.getRawAxis(QuickMod.drivetrainController[0])-controller.getRawAxis(QuickMod.drivetrainController[1]))/2);
     }
 
     public void postEnd() {
@@ -93,7 +94,7 @@ public class Drivetrain extends SubsystemBase {
         try {
             for(SpeedController i : lMot) {
                i.set(1/mod);
-             }
+             }3
     
             for(SpeedController i : rMot) {
                 i.set(-1/mod);
