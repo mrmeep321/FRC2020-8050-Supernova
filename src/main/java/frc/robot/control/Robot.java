@@ -17,9 +17,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.misc.MechanicsJoystick;
 import frc.robot.misc.QuickMod;
+import frc.robot.subsystems.EnhancedSubsystem;
 import frc.robot.subsystems.EnhancedSubsystemCollection;
 import frc.robot.subsystems.drivetrain.DriveMotor;
 import frc.robot.subsystems.drivetrain.Drivetrain;
+import frc.robot.subsystems.drivetrain.DrivetrainAutonCommand;
+import frc.robot.subsystems.drivetrain.DrivetrainDefaultCommand;
 import frc.robot.subsystems.drivetrain.DriveMotor.MotorDirection;
 import frc.robot.subsystems.shooter.Intake;
 import frc.robot.subsystems.shooter.Shooter;
@@ -72,18 +75,13 @@ public class Robot extends TimedRobot {
     jA = new Joystick(0);
     jB = new MechanicsJoystick(1);
 
-    dtMotorLeftA = new PWMTalonFX(0);
-    dtMotorLeftB = new PWMTalonFX(0);
-    dtMotorRightA = new PWMTalonFX(1);
-    dtMotorRightB = new PWMTalonFX(1);
-
     mTiltFront = new TalonSRX(QuickMod.frontTilt);
     mTiltBack = new TalonSRX(QuickMod.backTilt);
     mShooterLeft = new TalonSRX(QuickMod.leftTubeWheel);
     mShooterRight = new TalonSRX(QuickMod.rightTubeWheel);
     mBelt = new TalonSRX(QuickMod.belt);
 
-    dt = new Drivetrain(jA, new DriveMotor(dtMotorLeftA, MotorDirection.LEFT), new DriveMotor(dtMotorLeftB, MotorDirection.LEFT), new DriveMotor(dtMotorRightA, MotorDirection.RIGHT), new DriveMotor(dtMotorRightB, MotorDirection.RIGHT));
+    dt = new Drivetrain();
     shooter = new Shooter(mTiltFront, mTiltBack, mShooterLeft, mShooterRight, mBelt, jB);
     //intake = new Intake();
 
@@ -119,6 +117,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    EnhancedSubsystem.endAll();
   }
 
   @Override
@@ -126,18 +125,18 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
+   * This autonomous runs the auton1omous command selected by your {@link RobotContainer} class.
    */
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
+    /*if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
-    }
+    }*/
 
-    dt.autonDriveMod(1000, 1);
+    new DrivetrainAutonCommand(dt).schedule();
   }
 
   /**
@@ -156,10 +155,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-    dt.start();
-    shooters.start();
-    intake.start();
   }
 
   /**

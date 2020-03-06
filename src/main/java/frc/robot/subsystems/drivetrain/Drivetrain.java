@@ -3,6 +3,7 @@ package frc.robot.subsystems.drivetrain;
 import java.util.Vector;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PWMTalonFX;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,23 +12,26 @@ import frc.robot.misc.QuickMod;
 import frc.robot.subsystems.EnhancedSubsystem;
 import frc.robot.subsystems.drivetrain.DriveMotor.MotorDirection;
 
-public class Drivetrain extends EnhancedSubsystem {
+public class Drivetrain extends SubsystemBase {
     private Vector<SpeedController> lMot;
     private Vector<SpeedController> rMot;
     private Joystick controller;
 
     /*
-    * Constructs a new drivetrain using the configuration array.
-    * Config array - {String motorType (Left, Right), SpeedController motor}
-    *
-    *
-    */
-    public Drivetrain(Joystick controller, DriveMotor... motConf) {
-        super(true);
+     * Constructs a new drivetrain using the configuration array. Config array -
+     * {String motorType (Left, Right), SpeedController motor}
+     *
+     *
+     */
+    public Drivetrain() {
+        this.setDefaultCommand(new DrivetrainDefaultCommand(this));
 
-        lMot = new Vector<>();
-        rMot = new Vector<>();
-        this.controller = controller;
+        Vector<DriveMotor> motConf = new Vector<>();
+
+        motConf.add(new DriveMotor(new PWMTalonFX(0), DriveMotor.MotorDirection.LEFT));
+        motConf.add(new DriveMotor(new PWMTalonFX(9), DriveMotor.MotorDirection.RIGHT));
+
+        this.controller = new Joystick(0);
 
         for(DriveMotor i : motConf) {
             DriveMotor.MotorDirection dir = i.getDir();
@@ -45,28 +49,44 @@ public class Drivetrain extends EnhancedSubsystem {
         }
     }
 
-    @Override
-    public void loop() {
+    public void drive(double speed) {
         double mod = QuickMod.speedMod;
         double g;
+
+        g = speed;
+
         for(SpeedController i : lMot) {
-            g = -controller.getRawAxis(QuickMod.drivetrainController[0])+controller.getRawAxis(QuickMod.drivetrainController[1]);
             i.set(((g > 1) ? 1 : (g < -1) ? -1 : g)/mod);
          }
 
         for(SpeedController i : rMot) {
-            g = controller.getRawAxis(QuickMod.drivetrainController[0])+controller.getRawAxis(QuickMod.drivetrainController[1]);
+            g = -g;
             i.set(((g > 1) ? 1 : (g < -1) ? -1 : g)/mod);
         }
     }
 
-    @Override
-    public void postEnd() {
-        motorsOff();
+    public void drive(double speedL, double speedR) {
+        double mod = QuickMod.speedMod;
+        double l, r;
+
+        l = speedL;
+        r = speedR;
+
+        for(SpeedController i : lMot) {
+            i.set(((l > 1) ? 1 : (l < -1) ? -1 : l)/mod);
+         }
+
+        for(SpeedController i : rMot) {
+            i.set(((r > 1) ? 1 : (r < -1) ? -1 : r)/mod);
+        }
     }
 
-    public void autonDrive(int ms) {
-        
+    public void loopTick() {
+        drive(-controller.getRawAxis(QuickMod.drivetrainController[0])+controller.getRawAxis(QuickMod.drivetrainController[1]), controller.getRawAxis(QuickMod.drivetrainController[0])-controller.getRawAxis(QuickMod.drivetrainController[1]));
+    }
+
+    public void postEnd() {
+        motorsOff();
     }
 
     public void autonDriveMod(int ms, double mod) {
@@ -92,4 +112,5 @@ public class Drivetrain extends EnhancedSubsystem {
             e.printStackTrace();
         }
     }
+
 }
