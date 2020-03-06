@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
   private SpeedController dtMotorLeftA, dtMotorRightA, dtMotorLeftB, dtMotorRightB;
   private TalonSRX mTiltFront, mTiltBack, mBelt, mShooterLeft, mShooterRight;
 
-  //private ColorSensorV3 color;
+  //private ColorSensorV3 color;b
   //private I2C.Port colorPort;
 
   private Drivetrain dt;
@@ -136,6 +136,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    dt.autonDriveMod(1000, 1);
   }
 
   /**

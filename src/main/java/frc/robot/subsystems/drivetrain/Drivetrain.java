@@ -64,4 +64,32 @@ public class Drivetrain extends EnhancedSubsystem {
     public void postEnd() {
         motorsOff();
     }
+
+    public void autonDrive(int ms) {
+        
+    }
+
+    public void autonDriveMod(int ms, double mod) {
+        try {
+            for(SpeedController i : lMot) {
+               i.set(1/mod);
+             }
+    
+            for(SpeedController i : rMot) {
+                i.set(-1/mod);
+            }
+            
+            Thread.sleep(ms);
+
+            for(SpeedController i : lMot) {
+                i.set(0);
+            }
+
+            for(SpeedController i: rMot) {
+                i.set(0);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
