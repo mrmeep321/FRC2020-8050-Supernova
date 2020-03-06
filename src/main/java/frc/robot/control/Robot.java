@@ -27,6 +27,7 @@ import frc.robot.subsystems.drivetrain.DriveMotor.MotorDirection;
 import frc.robot.subsystems.shooter.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterBelt;
+import frc.robot.subsystems.shooter.ShooterMechanism;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -48,6 +49,8 @@ public class Robot extends TimedRobot {
   //private I2C.Port colorPort;
 
   public static Drivetrain dt;
+  public static ShooterMechanism sm;
+
   private Shooter shooter;
   private ShooterBelt shooterBelt;
   private EnhancedSubsystemCollection shooters;
@@ -89,6 +92,8 @@ public class Robot extends TimedRobot {
     mBelt = new TalonSRX(QuickMod.belt);
 
     dt = new Drivetrain();
+    sm = new ShooterMechanism();
+
     shooter = new Shooter(mTiltFront, mTiltBack, mShooterLeft, mShooterRight, mBelt, jB);
     //intake = new Intake();
 

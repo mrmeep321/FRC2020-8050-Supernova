@@ -94,7 +94,7 @@ public class Drivetrain extends SubsystemBase {
         try {
             for(SpeedController i : lMot) {
                i.set(1/mod);
-             }3
+             }
     
             for(SpeedController i : rMot) {
                 i.set(-1/mod);
